@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>React Combine Angular</title>
+    </head>
+    <body ng-app="app">
+
+        <div class="">
+            <input ng-model="name"/>
+            <h4>
+                ReactJS <hello name="name"></hello>
+            </h4>
+            <h4>
+                AngularJs:
+                <div class="">
+                    Hello, {{name}}
+                </div>
+            </h4>
+        </div>
+
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="react\build\react.js"></script>
+    <script src="react\build\react-dom.js"></script>
+    <script >
+        var HelloWorld = React.createClass({
+            displayName:'Hello World',
+            render:function(){
+                return React.DOM.div(null, "Hello, ",this.props.name1);
+            }
+        });
+    </script>
+    <script>
+        angular.module('app', []).controller( 'ctrl', ['$scope', function($scope){
+         $scope.name = 'World!';
+        }]).directive('hello', function(){
+            return{
+            restrict:'E',
+                    scope:{
+                            name:'='
+                },
+                    link:function(scope, el, attrs){
+                        scope.$watch('name', function(newValue, oldValue){
+                            var MyComponent = React.createFactory(HelloWorld);
+                            ReactDOM.render(
+                                    MyComponent({name1:newValue}),
+                                    el[0]
+                            );
+                    })
+                }
+            }
+        })
+    </script>
+</html>
